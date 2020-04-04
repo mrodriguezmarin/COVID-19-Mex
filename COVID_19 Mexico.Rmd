@@ -1,0 +1,68 @@
+---
+title: "Coronavirus"
+author: "Prof. Mauro Rodriguez"
+date: "19/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(rlang)
+```
+
+```{r}
+install.packages("usethis")
+```
+
+```{r}
+
+install.packages("devtools")
+
+```
+
+```{r}
+library(usethis)
+```
+
+
+```{r}
+
+
+
+devtools::install_github("pablorm296/covidMex")
+library(covidMex)
+
+```
+
+
+```{r}
+confirmados<-covidConfirmedMx()
+confirmados
+```
+
+```{r}
+save(confirmados,file="confirmados.csv")
+```
+
+
+
+```{r}
+library(dplyr)
+
+mutate(GrupoEdad=cut(edad,
+                     breaks=c(seq(0,90,by=10),inf),include.lowest=T))
+```
+
+
+```{r}
+#casosCovidMundo<-GetFromJHU()
+```
+
+
+
+
