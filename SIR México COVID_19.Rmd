@@ -1,0 +1,60 @@
+---
+title: "Modelo SIR"
+author: "Prof. Mauro Rodriguez Marin"
+date: "3/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(deSolve)
+#tamaño poblacional
+N = 12700
+#Estado inicial de los compartimentos
+init <- c(S = 1-1e-6,
+          I = 1e-6,
+          R = 0)
+#parámetros del modelo (coeficientes de las variables)
+param <- c(beta = 0.3526,
+           gamma = 0.1652)
+#Con estos dastos de beta y gamma obtenemos un parámetro importante que se llama R0 (R.Cero) (0.3526/0.1652)= , que se denomina tasa básica de reproducción, y que representa el número de nuevos infectados producidos por un sólo infectado si toda la población es susceptible, para el caso de México estamos tomando como una problación susceptible de: .
+
+#crear la función con las ODE
+sir <- function(times, init, param) {
+  with(as.list(c(init, param)), {
+#ecuaciones diferenciales   
+    dS <- -beta * S * I
+    dI <-  beta * S * I - gamma * I
+    dR <-                 gamma * I
+#resultados de las tasas de cambio    
+    return(list(c(dS, dI, dR)))
+  })
+}
+#intervalo de tiempo y resolución
+times <- seq(1, 140
+             , by = 1)
+#resolver el sistema de ecuaciones con función 'ode'
+out <- ode(y = init, times = times, func = sir, parms = param)
+#cambiar out a un data.frame
+out <- as.data.frame(out*N) #aqui puede multiplicar 'out' por N
+#eliminar la variable 'time' en out
+out$time <- NULL
+#mostrar 10 primeros datos
+
+head(out,50)
+
+#gráfica
+matplot(x = times, y = out, type = "l",
+        xlab = "Días desde el primer infectado", ylab = "Infectados,Susceptibles, Recuperados", main = "",
+        lwd = 1, lty = 1, bty = "l", col = 4:00)
+#añadir leyenda de líneas
+legend(90, 7500, c("Susceptibles S(t)", "Infectados I(t)", "Recuperados R(t)"), 
+       pch = 1, col = 2:4, bty = "n", cex = 1)
+```
+
+
+
