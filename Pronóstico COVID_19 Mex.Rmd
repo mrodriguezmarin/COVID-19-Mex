@@ -1,0 +1,144 @@
+---
+title: "Pronóstico de COVID-19 confirmados acumulados para México"
+author: "Prof. Mauro Rodriguez"
+date: "13 de marzo de 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Introducir la serie de tiempo  en notacion cientifica o formato general, de otra forma aparecen inconsistencias. Fuente de datos: Secretaría de Salud y JHU
+
+```{r}
+getwd()
+```
+
+
+```{r}
+
+setwd("C:/Users/L01191825/Desktop/Laptop/Documents/Taller R")
+
+Confirmados<-read.csv("confirmados_acumulados.csv")
+
+
+```
+
+
+
+```{r}
+#library(tseries)
+```
+
+```{r}
+ts.Confirmados=ts(Confirmados, frequency =1, start=c(1), end = c(66))
+
+```
+
+
+
+```{r}
+#Graficar serie de tiempo
+plot(ts.Confirmados)
+
+```
+```{r}
+ts.Confirmados
+```
+
+
+```{r}
+dim(as.matrix(ts.Confirmados))
+```
+#Base de datos para entrenamiento y prueba
+
+```{r}
+Confirmados.train=window(ts.Confirmados, start=c(1), end=c(66))
+plot(Confirmados.train)
+
+```
+
+```{r}
+Confirmados.train
+```
+
+
+```{r}
+dim(as.matrix(Confirmados.train))
+```
+
+```{r}
+Confirmados.test=window(ts.Confirmados, start=c(1), end=c(66))
+plot(Confirmados.test)
+```
+
+```{r}
+library(forecast)
+
+arima1=auto.arima(Confirmados.train, trace=TRUE, test = "kpss",ic="bic" )
+```
+
+```{r}
+summary(arima1)
+confint(arima1)
+```
+
+#Diagnostico de residuales
+
+```{r}
+#install.packages("tseries")
+#install.packages("forecast")
+#install.packages("TSPred")
+library(forecast)
+library(tseries)
+library(TSPred)
+```
+
+#En lugar de la funcion forecast. Arima usar la funcion "forecast"
+
+```{r}
+arima1.forecast=forecast(arima1, h=9)
+
+arima1.forecast
+```
+
+
+```{r}
+plot(arima1.forecast, xlab="Periodo", ylab="Pronóstico de COVID-19 Acumulados Mexico))")
+```
+
+```{r}
+library(TSPred)
+```
+
+
+```{r}
+
+plotarimapred(Confirmados.test,arima1,xlim=c(1,73), range.percent = 0.06, ylab = "Infectados acumulados COVID-19 México",
+xlab = "---- real  ____ Pronóstico    Fuente de Históricos: JHU ")
+
+```
+
+```{r}
+#accuracy(arima1.forecast,Confirmados.test)
+
+```
+
+
+```{r}
+arima1.forecast=forecast(arima1, h=9)
+
+arima1.forecast
+```
+
+```{r}
+plot(arima1.forecast)
+```
+
+`
+```{r}
+print(arima1.forecast)
+```
+
+
